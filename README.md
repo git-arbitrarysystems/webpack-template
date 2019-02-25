@@ -1,2 +1,2 @@
-README.md
-TEST
+# webpack-template
+
