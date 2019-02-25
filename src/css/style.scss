@@ -1,7 +1,9 @@
-$background:#12399b;
+$backgroundColor:#ccdddd;
+$textColor:#003333;
 
 body{
 	margin: 0;
 	padding: 0;
-	background-color:$background
+	background-color:$backgroundColor;
+	color: $textColor;
 }
