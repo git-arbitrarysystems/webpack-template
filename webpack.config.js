@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const packageJSON = require('./package.json');
 
 module.exports = {
@@ -48,8 +49,10 @@ module.exports = {
     ]
   },
   plugins:[
+    new CleanWebpackPlugin(['dist','build'],{}),
   	new HtmlWebpackPlugin({
-      title:packageJSON.name
+      title:packageJSON.name,
+      favicon:'./src/img/favicon.png'
     })
   ]
 };
