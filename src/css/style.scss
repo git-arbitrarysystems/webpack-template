@@ -1,7 +1,19 @@
+
+
 $backgroundColor:#ccdddd;
 $textColor:#003333;
 
+@font-face {
+  font-family: 'flashlight';
+  src:  url('../font/flashlight.otf') format('opentype'),
+        url('../font/flashlight.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
 body{
+	font-family: 'flashlight';
+	font-size: 2em;
 	margin: 0;
 	padding: 0;
 	background-color:$backgroundColor;

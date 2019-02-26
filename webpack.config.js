@@ -45,12 +45,21 @@ module.exports = {
         }]
       },
 
+      // RAW STRINGS
       {
         test:/snippet\.html$/,
         use: [
           'raw-loader'
         ]
-      }
+      },
+
+      // FONTS
+      {
+         test: /\.(woff|woff2|eot|ttf|otf)$/,
+         use: [
+           'file-loader'
+         ]
+       }
     
     ]
   },
