@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const packageJSON = require('./package.json');
 const webpack = require('webpack');
 
@@ -9,14 +10,18 @@ module.exports = {
     index:'./src/index.js'
   },
   output: {
-    filename: '[name].bundle.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'build')
   },
-  devServer:{
-  	contentBase: path.join(__dirname, 'build'),
-    hot:true
+  devtool:'source-map',
+  
+  // STARTS ON BUILD
+  watch:true,
+  watchOptions: {
+    ignored: /node_modules/
   },
-  devtool:'inline-source-map',
+  
+
   module: {
     rules: [
       
@@ -26,43 +31,19 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [[
-              '@babel/preset-env',
-              {
-                targets: {
-                  esmodules: false
-                }
-              }
-            ]]
+            presets: ['@babel/preset-env']
           }
         }
       },
 
 
-      // {
-      //   test: /.\mjs$/,
-      //   exclude:/(node_modules)/,
-      //   parser: {
-      //     // amd: false, // disable AMD
-      //     // commonjs: false, // disable CommonJS
-      //     // system: false, // disable SystemJS
-      //     // harmony: false, // disable ES2015 Harmony import/export
-      //     // requireInclude: false, // disable require.include
-      //     // requireEnsure: false, // disable require.ensure
-      //     // requireContext: false, // disable require.context
-      //     // browserify: false, // disable special handling of Browserify bundles
-      //     // requireJs: false, // disable requirejs.*
-      //     // node: false, // disable __dirname, __filename, module, require.extensions, require.main, etc.
-      //     // node: {...} // reconfigure [node](/configuration/node) layer on module level
-      //   }
-      // },
-
       {      
         test: /\.scss$/,
         use: [
-            "style-loader", // creates style nodes from JS strings
-            "css-loader", // translates CSS into CommonJS
-            "sass-loader" // compiles Sass to CSS, using Node Sass by default
+            // fallback to style-loader in development
+           MiniCssExtractPlugin.loader,
+            {loader:"css-loader", options:{ sourceMap:true } },
+            {loader:"sass-loader", options:{ sourceMap:true } },
         ]
       },
 
@@ -97,9 +78,12 @@ module.exports = {
   plugins:[
     new CleanWebpackPlugin(['build'],{}),
   	new HtmlWebpackPlugin({
-      title:packageJSON.name,
+      template:'./src/index.html',
       favicon:'./src/img/favicon.png'
     }),
-    new webpack.HotModuleReplacementPlugin({})
+    new MiniCssExtractPlugin({
+        filename: "[name].css",
+        chunkFilename: "[id].css"
+    })
   ]
 };

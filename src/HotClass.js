@@ -1,21 +1,12 @@
-
-
-function message(){
-	if (window.console) window.console.log('message: 2');
-}
-
-class message2{
+export class HotClass{
 	constructor(){
-		if (window.console) window.console.log('message2: 1', this );
+		if( window.console ) console.log('HotClass');
+
+		document.addEventListener('click', (e)=>{ if( window.console ) console.log(this.message); })
+
 	}
-	get msg(){
-		return msg;
+	get message(){
+		return 'Apples'
 	}
 }
 
-var msg = 'popo-<<<< 00000';
-
-
-
-
-export {message, message2, msg};
