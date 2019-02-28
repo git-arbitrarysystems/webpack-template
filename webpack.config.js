@@ -2,16 +2,21 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const packageJSON = require('./package.json');
+const webpack = require('webpack');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    index:'./src/index.js'
+  },
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'build')
   },
   devServer:{
-  	contentBase: path.join(__dirname, 'dist'),
+  	contentBase: path.join(__dirname, 'build'),
+    hot:true
   },
+  devtool:'inline-source-map',
   module: {
     rules: [
       
@@ -21,10 +26,36 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: [[
+              '@babel/preset-env',
+              {
+                targets: {
+                  esmodules: false
+                }
+              }
+            ]]
           }
         }
       },
+
+
+      // {
+      //   test: /.\mjs$/,
+      //   exclude:/(node_modules)/,
+      //   parser: {
+      //     // amd: false, // disable AMD
+      //     // commonjs: false, // disable CommonJS
+      //     // system: false, // disable SystemJS
+      //     // harmony: false, // disable ES2015 Harmony import/export
+      //     // requireInclude: false, // disable require.include
+      //     // requireEnsure: false, // disable require.ensure
+      //     // requireContext: false, // disable require.context
+      //     // browserify: false, // disable special handling of Browserify bundles
+      //     // requireJs: false, // disable requirejs.*
+      //     // node: false, // disable __dirname, __filename, module, require.extensions, require.main, etc.
+      //     // node: {...} // reconfigure [node](/configuration/node) layer on module level
+      //   }
+      // },
 
       {      
         test: /\.scss$/,
@@ -64,10 +95,11 @@ module.exports = {
     ]
   },
   plugins:[
-    new CleanWebpackPlugin(['dist','build'],{}),
+    new CleanWebpackPlugin(['build'],{}),
   	new HtmlWebpackPlugin({
       title:packageJSON.name,
       favicon:'./src/img/favicon.png'
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin({})
   ]
 };
