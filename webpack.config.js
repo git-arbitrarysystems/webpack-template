@@ -13,12 +13,24 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, 'build')
   },
-  devtool:'source-map',
+
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    }
+  },
   
-  // STARTS ON BUILD
-  watch:true,
-  watchOptions: {
-    ignored: /node_modules/
+  mode:'development',
+  devtool:'eval',
+
+  resolve:{
+    modules: ['node_modules', 'src/lib/', 'src/lib/static']
+  },
+
+  devServer: {
+    contentBase: path.join(__dirname, 'build'),
+    port: 8080,
+    hotOnly:true
   },
   
 
@@ -27,7 +39,7 @@ module.exports = {
       
       {
         test: /\.m?js$/,
-        exclude: /(node_modules)/,
+        include: path.resolve(__dirname, 'src'),
         use: {
           loader: 'babel-loader',
           options: {
@@ -40,8 +52,7 @@ module.exports = {
       {      
         test: /\.scss$/,
         use: [
-            // fallback to style-loader in development
-           MiniCssExtractPlugin.loader,
+           'style-loader',//MiniCssExtractPlugin.loader,
             {loader:"css-loader", options:{ sourceMap:true } },
             {loader:"sass-loader", options:{ sourceMap:true } },
         ]
@@ -85,5 +96,6 @@ module.exports = {
         filename: "[name].css",
         chunkFilename: "[id].css"
     })
+    new webpack.HotModuleReplacementPlugin()
   ]
 };
